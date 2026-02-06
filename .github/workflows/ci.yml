@@ -9,6 +9,7 @@ on:
       - "docker-compose.yml"
       - "app/**"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/cd.yml"
   # Exécuter aussi sur pull request pour vérifier le build Docker
   pull_request:
     paths:
@@ -16,6 +17,7 @@ on:
       - "docker-compose.yml"
       - "app/**"
       - ".github/workflows/ci.yml"
+      - ".github/workflows/cd.yml"
 
 permissions:
   contents: read # Lire le dépôt
