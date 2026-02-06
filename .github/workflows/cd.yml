@@ -1,0 +1,44 @@
+name: CD-CyrilD
+
+on:
+  # Déclenchement après un CI réussi sur main
+  workflow_run:
+    workflows: ["CI-CyrilD"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    # Déployer uniquement si le workflow CI a réussi et venait d'un push
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # Récupère le code du dépôt
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      # Active Buildx pour les builds Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Se connecter à Azure Container Registry
+      - name: Connexion ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # Build + push de l'image
+      - name: Build & Push (CD)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.ACR_LOGIN_SERVER }}/${{ github.repository_owner }}/mini-notes:latest
+            ${{ secrets.ACR_LOGIN_SERVER }}/${{ github.repository_owner }}/mini-notes:${{ github.event.workflow_run.head_sha }}
