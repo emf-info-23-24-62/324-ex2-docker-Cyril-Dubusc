@@ -40,5 +40,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.ACR_LOGIN_SERVER }}/${{ github.repository_owner }}/mini-notes:latest
-            ${{ secrets.ACR_LOGIN_SERVER }}/${{ github.repository_owner }}/mini-notes:${{ github.event.workflow_run.head_sha }}
+            ${{ secrets.ACR_LOGIN_SERVER }}/Cyril-Dubusc/mini-notes:latest
+            ${{ secrets.ACR_LOGIN_SERVER }}/Cyril-Dubusc/mini-notes:${{ github.event.workflow_run.head_sha }}
